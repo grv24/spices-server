@@ -1,14 +1,24 @@
 import express from "express";
 import userRoutes from "./routes/user.route";
+import cors from "cors";
 
 const app = express();
+app.use(
+  cors({
+    origin: "*",
+  })
+);
 
 //Health check endpoint at root
-app.get("/", (req, res) => {
+app.get("/api", (req, res) => {
   res.status(200).send("Server is live");
 });
 
 app.use(express.json());
-app.use("/api", userRoutes);
+
+//import routes
+import { userRouter } from "./routes";
+
+app.use("/api/user", userRouter);
 
 export default app;
