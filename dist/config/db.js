@@ -12,20 +12,23 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const app_1 = __importDefault(require("./app"));
-const db_1 = __importDefault(require("./config/db"));
-const port = Number(process.env.PORT) || 8080;
-const startServer = () => __awaiter(void 0, void 0, void 0, function* () {
+const index_1 = require("./index");
+const mongoose_1 = __importDefault(require("mongoose"));
+const DB_NAME = "Spieces";
+const connectToDatabase = () => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        yield (0, db_1.default)();
-        app_1.default.listen(port, () => {
-            console.log(`Server is listening on - http://localhost:${port}`);
+        if (!index_1.config.DB_URL) {
+            throw new Error("DB_URL is not defined in the configuration");
+        }
+        yield mongoose_1.default.connect(index_1.config.DB_URL, {
+            dbName: DB_NAME,
         });
+        console.log("MongoDB connected successfully");
     }
     catch (error) {
-        console.error("Failed to start the server:", error.message);
+        console.error("MongoDB connection error:", error.message);
         process.exit(1);
     }
 });
-startServer();
-//# sourceMappingURL=index.js.map
+exports.default = connectToDatabase;
+//# sourceMappingURL=db.js.map
