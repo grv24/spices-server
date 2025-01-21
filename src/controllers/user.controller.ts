@@ -6,7 +6,7 @@ import { IUser } from "../models";
 const userService = new UserService();
 
 // Utility for error handling
-const handleError = (res: Response, error: unknown) => {
+export const handleError = (res: Response, error: unknown) => {
   if (error instanceof Error) {
     res.status(400).json({ message: error.message });
   } else {

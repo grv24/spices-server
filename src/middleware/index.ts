@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
 import { Request, Response, NextFunction } from "express";
-import { User } from "../models";
+import { Admin, User } from "../models";
 
 interface JwtPayload {
   id: string;
@@ -31,12 +31,14 @@ export const authenticateMiddleware = (...allowedRoles: string[]) => {
 
       let user = null;
 
-      if (allowedRoles.includes(decoded.role)) {
+      if (allowedRoles.includes("user")) {
         user = await User.findById(decoded.id);
+      }else  if (allowedRoles.includes("admin")) {
+        user = await Admin.findById(decoded.id);
       }
 
       if (!user) {
-        return res.status(404).json({ message: "User not found" });
+        return res.status(404).json({ message: `${allowedRoles.includes("user")?"User not found":"Admin not found"}` });
       }
 
       req.user = user; // Attach user to request

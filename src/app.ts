@@ -17,8 +17,12 @@ app.get("/api", (req, res) => {
 app.use(express.json());
 
 //import routes
-import { userRouter } from "./routes";
+import { 
+  userRouter,
+  adminRouter 
+} from "./routes";
 
 app.use("/api/user", userRouter);
+app.use("/api/admin", adminRouter);
 
 export default app;

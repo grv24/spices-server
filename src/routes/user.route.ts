@@ -32,4 +32,9 @@ router.get("/",authenticateMiddleware("user"),(req:Request,res:Response)=>userCo
 
 //update user
 router.patch("/",authenticateMiddleware("user"),(req:Request,res:Response)=>userController.updateUserCurrentController(req,res))
+
+
+
+
+
 export default router;
