@@ -1,8 +1,10 @@
-import { User, IUser } from "../models";
+import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import { User } from "../models";
+import { IUser } from "../models";
 
-class UserService {
-  // Register a new user
+export class UserService {
+  //register
   async register(userData: IUser): Promise<IUser> {
     const { email, password, f_name, l_name, role } = userData;
 
@@ -21,14 +23,14 @@ class UserService {
     return await user.save();
   }
 
-  // User Login
+  //login
   async login(email: string, password: string): Promise<{ token: string }> {
     const user = await User.findOne({ email });
     if (!user) {
       throw new Error("User not found.");
     }
-    const isMatch = await user.comparePassword(password);
-    if (!isMatch) {
+    // const isMatch = await user.comparePassword(password);
+    if (user.password != password) {
       throw new Error("Invalid credentials.");
     }
     const token = jwt.sign(
@@ -46,32 +48,61 @@ class UserService {
     );
     return { token };
   }
-  //change password
+
+  //chage passsword
   async changePassword(
     userId: string,
-    currentPassword: string,
+    oldPassword: string,
     newPassword: string
-  ): Promise<string> {
-    // Find the user by ID
+  ): Promise<void> {
     const user = await User.findById(userId);
     if (!user) {
-      throw new Error("User not found.");
+      throw new Error("User not found");
+    }
+    if (user.password != oldPassword) {
+      throw new Error("Old password is incorrect");
     }
 
-    // Check if the current password is correct
-    const isMatch = await user.comparePassword(currentPassword);
-    if (!isMatch) {
-      throw new Error("Current password is incorrect.");
-    }
-
-    // Set the new password (this will trigger the pre-save hook and hash the password)
     user.password = newPassword;
-
-    // Save the updated user
+    // const isPasswordValid = await bcrypt.compare(oldPassword, user.password);
+    // if (!isPasswordValid) {
+    //   throw new Error("Old password is incorrect");
+    // }
+    // const salt = await bcrypt.genSalt(10);
+    // user.password = await bcrypt.hash(newPassword, salt);
     await user.save();
-
-    return "Password successfully updated.";
   }
-}
 
-export default UserService;
+  //get current user
+  async getCurrentUser(userId: string): Promise<IUser> {
+    const user = await User.findById(userId);
+    if (!user) {
+      throw new Error("User not found");
+    }
+    return user;
+  }
+  //update user
+  async updateUser(userId: string, data: Partial<IUser>): Promise<IUser> {
+    const user = await User.findByIdAndUpdate(userId, data, { new: true });
+    if (!user) {
+      throw new Error("User not found");
+    }
+    return user;
+  }
+  //forget password
+  async forgetPassword() {}
+  //logout
+  async logoutUser() {}
+  //delete user
+  async deleteUser() {}
+  //get all user
+  async getAllUser(): Promise<IUser[]> {
+    const users = await User.find();
+    return users;
+  }
+
+  //send otp
+  async sendOtp() {}
+  //verify otp
+  async verifyOtp() {}
+}

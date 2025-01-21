@@ -5,90 +5,129 @@ import { IUser } from "../models";
 // Initialize the UserService instance
 const userService = new UserService();
 
+// Utility for error handling
+const handleError = (res: Response, error: unknown) => {
+  if (error instanceof Error) {
+    res.status(400).json({ message: error.message });
+  } else {
+    res
+      .status(500)
+      .json({ message: "Internal server error. Please try again later." });
+  }
+};
+
 class UserController {
+  // register
   async registerController(req: Request, res: Response) {
     try {
       const userData: IUser = req.body;
-      // Call the register method from UserService
       const user = await userService.register(userData);
+      const { password, ...safeUserData } = user.toObject();
 
-      // Respond with success and user data
       res.status(201).json({
         status: true,
         message: "User registered successfully",
-        data: user,
+        data: safeUserData,
       });
     } catch (error) {
-      // Handle errors
-      if (error instanceof Error) {
-        res.status(400).json({
-          message: error.message,
-        });
-      } else {
-        res.status(500).json({
-          message: "Internal server error. Please try again later.",
-        });
-      }
+      console.error("Error registering user:", error);
+      handleError(res, error);
     }
   }
-
-  //login
+  // login
   async loginController(req: Request, res: Response) {
     try {
       const { email, password } = req.body;
+
       if (!email || !password) {
-        res.status(400).json({ message: "Email and Password are required. " });
-        return;
+        return res
+          .status(400)
+          .json({ message: "Email and password are required." });
       }
+
       const userData = await userService.login(email, password);
 
-      // Respond with success and user data
-      res.status(201).json({
+      res.status(200).json({
         status: true,
-        message: "User login successfully",
+        message: "User login successful",
         data: userData,
       });
     } catch (error) {
-      // Handle errors
-      if (error instanceof Error) {
-        res.status(400).json({
-          message: error.message,
-        });
-      } else {
-        res.status(500).json({
-          message: "Internal server error. Please try again later.",
-        });
+      console.error("Error logging in user:", error);
+      handleError(res, error);
+    }
+  }
+  // chngepassword
+  async passwordChangeController(req: Request, res: Response) {
+    try {
+      const user = req.user;
+
+      if (!user) {
+        return res.status(401).json({ message: "Unauthorized" });
       }
+
+      const { oldPassword, newPassword } = req.body;
+
+      if (!oldPassword || !newPassword) {
+        return res
+          .status(400)
+          .json({ message: "Old and new passwords are required." });
+      }
+
+      await userService.changePassword(user._id, oldPassword, newPassword);
+
+      res.status(200).json({ message: "Password changed successfully" });
+    } catch (error) {
+      console.error("Error changing password:", error);
+      handleError(res, error);
     }
   }
 
-  //change password
-  // async passwordChangeController(req: Request, res: Response) {
-  //   try {
-  //     const { currentPassword, newPassword } = req.body;
-  //     const userId = req; 
-
-  //     // Validate the request body
-  //     if (!currentPassword || !newPassword) {
-  //       res
-  //         .status(400)
-  //         .json({ message: "Current and new password are required." });
-  //       return;
-  //     }
-  //     const result = await userService.changePassword(userId,currentPassword,newPassword)
-  //   } catch (error) {
-  //     // Handle errors
-  //     if (error instanceof Error) {
-  //       res.status(400).json({
-  //         message: error.message,
-  //       });
-  //     } else {
-  //       res.status(500).json({
-  //         message: "Internal server error. Please try again later.",
-  //       });
-  //     }
-  //   }
-  // }
+  async getUserCurrentController(req: Request, res: Response) {
+    try {
+      if (!req.user) {
+        return res.status(401).json({ message: "Unauthorized" });
+      }
+      const user = await userService.getCurrentUser(req.user._id);
+      res.status(200).json({
+        status: true,
+        message: "User fetched successfully",
+        data: user,
+      });
+    } catch (error) {
+      console.error("Error fetching user:", error);
+      handleError(res, error);
+    }
+  }
+  async updateUserCurrentController(req: Request, res: Response) {
+    try {
+      if (!req.user) {
+        return res.status(401).json({ message: "Unauthorized" });
+      }
+      const user = await userService.updateUser(req.user._id, req.body);
+      res.status(200).json({
+        status: true,
+        message: "User updated successfully",
+        data: user,
+      });
+    } catch (error) {
+      console.error("Error updating user:", error);
+      handleError(res, error);
+    }
+  }
+  async getAllUserController(req: Request, res: Response) {
+    try {
+      const users = await userService.getAllUser();
+      res.status(200).json({
+        status: true,
+        message: "Users fetched successfully",
+        data: users,
+      });
+    } catch (error) {
+      console.error("Error fetching users:", error);
+      handleError(res, error);
+    }
+  }
 }
 
 export default UserController;

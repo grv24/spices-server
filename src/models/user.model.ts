@@ -29,7 +29,7 @@ export interface IUser extends Document {
   role: string;
   cart: ICartItem[];
   wishlist: IWishlistItem[];
-  orders: mongoose.Schema.Types.ObjectId[]; // Ref to the Order model
+  orders: mongoose.Schema.Types.ObjectId[]; 
   status: string; // e.g., "active", "inactive", "suspended"
   comparePassword(candidatePassword: string): Promise<boolean>;
   generateAuthToken(): string;
@@ -139,15 +139,15 @@ const userSchema = new Schema<IUser>({
 });
 
 // Password hashing before saving the user
-userSchema.pre("save", async function (next) {
-  const user = this as IUser;
-  if (!user.isModified("password")) {
-    return next(); // Skip hashing if the password hasn't been modified
-  }
-  const salt = await bcrypt.genSalt(10); // Generate salt for hashing
-  user.password = await bcrypt.hash(user.password, salt); // Hash the password
-  next(); // Continue saving the user
-});
+// userSchema.pre("save", async function (next) {
+//   const user = this as IUser;
+//   if (!user.isModified("password")) {
+//     return next(); // Skip hashing if the password hasn't been modified
+//   }
+//   const salt = await bcrypt.genSalt(10); // Generate salt for hashing
+//   user.password = await bcrypt.hash(user.password, salt); // Hash the password
+//   next(); // Continue saving the user
+// });
 
 // Method to compare passwords
 userSchema.methods.comparePassword = async function (
