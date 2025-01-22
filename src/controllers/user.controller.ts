@@ -16,7 +16,7 @@ export const handleError = (res: Response, error: unknown) => {
   }
 };
 
-class UserController {
+export class UserController {
   // register
   async registerController(req: Request, res: Response) {
     try {
@@ -129,5 +129,3 @@ class UserController {
     }
   }
 }
-
-export default UserController;
