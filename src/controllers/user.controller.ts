@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { UserService } from "../services";
 import { IUser } from "../models";
+import { stat } from "fs";
 
 // Initialize the UserService instance
 const userService = new UserService();
@@ -8,7 +9,7 @@ const userService = new UserService();
 // Utility for error handling
 export const handleError = (res: Response, error: unknown) => {
   if (error instanceof Error) {
-    res.status(400).json({ message: error.message });
+    res.status(400).json({ message: error.message ,status:false});
   } else {
     res
       .status(500)
