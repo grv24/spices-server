@@ -4,6 +4,8 @@ import Product, { IProduct } from "./product.model";
 
 import Offer, { IOffer } from "./offer.model";
 
+import Banner, { IBanner } from "./banner.model";
+
 export {
   //user
   User,
@@ -17,4 +19,7 @@ export {
   //offer
   Offer,
   IOffer,
+  //banner
+  Banner,
+  IBanner,
 };

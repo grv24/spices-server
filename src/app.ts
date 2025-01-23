@@ -17,10 +17,16 @@ app.get("/api", (req, res) => {
 app.use(express.json());
 
 //import routes
-import { userRouter, adminRouter, productRouter } from "./routes";
+import { 
+  userRouter, 
+  adminRouter, 
+  productRouter,
+  bannerRouter 
+} from "./routes";
 
 app.use("/api/user", userRouter);
 app.use("/api/admin", adminRouter);
 app.use("/api/product", productRouter);
+app.use("/api/banner", bannerRouter);
 
 export default app;
