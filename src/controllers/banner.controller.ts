@@ -33,7 +33,6 @@ export class BannerController {
       const bannerId = req.params.id;
       const bannerData: IBanner = req.body;
       const file = req.file;
-      console.log("file", file);
       let banner;
       if (!file) {
         banner = await bannerService.updateBanner(bannerId, bannerData);
