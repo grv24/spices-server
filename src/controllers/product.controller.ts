@@ -36,4 +36,19 @@ export class ProductController {
         }
     }
 
+    //get product according to their type
+    async getProductByTypeController(req: Request, res: Response) {
+        try {
+            const products = await productService.getProductByType(req.params.type);
+            res.status(200).json({
+                status: true,
+                message: "Products fetched successfully",
+                data: products,
+            });
+        } catch (error) {
+            console.error("Error fetching products:", error);
+            handleError(res, error);
+        }
+    }
+
 }

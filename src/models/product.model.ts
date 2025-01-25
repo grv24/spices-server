@@ -123,7 +123,7 @@ const productSchema = new Schema({
   productType: {
     type: String,
     required: [true, "Product type is required"],
-    enum: ["seed", "powder"],
+    enum: ["dried seed", "spicy masala"],
     default: null,
   },
   // additionalInformation: {

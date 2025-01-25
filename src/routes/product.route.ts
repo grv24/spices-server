@@ -19,6 +19,10 @@ router.get("/", (req: Request, res: Response) =>
   productController.getAllProductsController(req, res)
 );
 
+//get product by type
+router.get("/:type", (req: Request, res: Response) =>
+  productController.getProductByTypeController(req, res)
+);
 
 
 

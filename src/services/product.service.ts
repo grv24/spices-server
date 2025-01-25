@@ -32,4 +32,10 @@ export class ProductService {
     });
     return product;
   }
+
+  // get Product By Type
+  async getProductByType(type: string): Promise<IProduct[]> {
+    const updatedType = type.replace(/-/g, " ");
+    return Product.find({ productType: updatedType });
+  }
 }
