@@ -27,11 +27,20 @@ app.use(
 app.use(express.json());
 app.use(cookieParser());
 
+// Handle OPTIONS requests globally (preflight)
+app.options("*", (req, res) => {
+  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Content-Type, Authorization, X-Requested-With"
+  );
+  res.sendStatus(204); // No content
+});
+
 //Health check endpoint at root
 app.get("/api", (req, res) => {
   res.status(200).send("Server is live");
 });
-
 
 
 //import routes

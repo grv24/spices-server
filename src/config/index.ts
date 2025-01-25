@@ -9,6 +9,8 @@ const config = {
   CLOUDINARY_CLOUD_NAME: process.env.CLOUDINARY_CLOUD_NAME,
   CLOUDINARY_API_KEY: process.env.CLOUDINARY_API_KEY,
   CLOUDINARY_API_SECRET: process.env.CLOUDINARY_API_SECRET,
+  CLIENT_URL_LOCAL: process.env.CLIENT_URL_LOCAL,
+  CLIENT_URL_LIVE: process.env.CLIENT_URL_LIVE,
 };
 
 if (
@@ -17,7 +19,9 @@ if (
   !config.JWT_SECRET ||
   !config.CLOUDINARY_CLOUD_NAME ||
   !config.CLOUDINARY_API_KEY ||
-  !config.CLOUDINARY_API_SECRET
+  !config.CLOUDINARY_API_SECRET ||
+  !config.CLIENT_URL_LOCAL ||
+  !config.CLIENT_URL_LIVE
 ) {
   throw new Error("Missing required environment variables");
 }
