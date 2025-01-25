@@ -46,7 +46,7 @@ export class UserController {
           .json({ message: "Email and password are required." });
       }
 
-      const userData = await userService.login(email, password);
+      const userData = await userService.login(email, password, res);
 
       res.status(200).json({
         status: true,

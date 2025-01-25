@@ -1,5 +1,6 @@
 import jwt from "jsonwebtoken";
 import { User } from "../models";
+import { Response } from "express";
 import { IUser } from "../models";
 
 export class UserService {
@@ -23,7 +24,7 @@ export class UserService {
   }
 
   //login
-  async login(email: string, password: string): Promise<{ token: string }> {
+  async login(email: string, password: string,res: Response): Promise<{ token: string }> {
     const user = await User.findOne({ email });
     if (!user) {
       throw new Error("User not found.");
@@ -45,6 +46,14 @@ export class UserService {
         expiresIn: "12h",
       }
     );
+    // Save the token in a cookie
+    res.cookie("token", token, {
+      httpOnly: true, // Prevents client-side access to the cookie
+      secure: process.env.NODE_ENV === "production", // Use HTTPS in production
+      maxAge: 12 * 60 * 60 * 1000, // 12 hours in milliseconds
+      domain: "localhost", // Ensure this matches your server's domain
+      path: "/", 
+    });
     return { token };
   }
 

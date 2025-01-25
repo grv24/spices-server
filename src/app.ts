@@ -1,6 +1,7 @@
 import express from "express";
 import userRoutes from "./routes/user.route";
 import cors from "cors";
+import cookieParser from "cookie-parser";
 
 const app = express();
 app.use(
@@ -15,6 +16,7 @@ app.get("/api", (req, res) => {
 });
 
 app.use(express.json());
+app.use(cookieParser());
 
 //import routes
 import { 
