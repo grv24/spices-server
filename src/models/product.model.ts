@@ -65,6 +65,7 @@ const productSchema = new Schema({
   productName: {
     type: String,
     required: [true, "Product name is required"],
+    unique: true,
   },
   cardImages: {
     bgImage: {
