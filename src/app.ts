@@ -2,28 +2,37 @@ import express from "express";
 import userRoutes from "./routes/user.route";
 import cors from "cors";
 import cookieParser from "cookie-parser";
-
-
+import { config } from "./config";
 
 const allowedOrigins = [
-  process.env.CLIENT_URL_LOCAL, // Local frontend for testing
-  process.env.CLIENT_URL_LIVE, // Replace with your production frontend URL
+  config.CLIENT_URL_LOCAL, // Local frontend for testing
+  config.CLIENT_URL_LIVE,  // Production frontend URL
+  'http://localhost:5174', // Local frontend for testing
 ];
 
 
 const app = express();
+
+// CORS middleware configuration
 app.use(
   cors({
     origin: (origin, callback) => {
+      console.log(`Request Origin: ${origin}`); // Debugging log for the origin
       if (!origin || allowedOrigins.includes(origin)) {
-        callback(null, true); 
+        console.log("CORS allowed"); // Log allowed origins
+        callback(null, true); // Allow the request
       } else {
+        console.error(`Blocked by CORS: ${origin}`); // Log blocked origins
         callback(new Error("Not allowed by CORS"));
       }
     },
-    credentials: true, 
+    credentials: true, // Allow cookies to be sent
+    allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"], // Specify allowed headers
+    exposedHeaders: ["Authorization"], // Expose headers if needed
   })
 );
+
+// Middleware
 app.use(express.json());
 app.use(cookieParser());
 
@@ -37,20 +46,15 @@ app.options("*", (req, res) => {
   res.sendStatus(204); // No content
 });
 
-//Health check endpoint at root
+// Health check endpoint at root
 app.get("/api", (req, res) => {
   res.status(200).send("Server is live");
 });
 
+// Import routes
+import { userRouter, adminRouter, productRouter, bannerRouter } from "./routes";
 
-//import routes
-import { 
-  userRouter, 
-  adminRouter, 
-  productRouter,
-  bannerRouter 
-} from "./routes";
-
+// Use routes
 app.use("/api/user", userRouter);
 app.use("/api/admin", adminRouter);
 app.use("/api/product", productRouter);

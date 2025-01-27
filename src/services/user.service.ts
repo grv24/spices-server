@@ -48,7 +48,7 @@ export class UserService {
     );
     // Save the token in a cookie
     res.cookie("token", token, {
-      httpOnly: true, // Prevents client-side access to the cookie
+      httpOnly: false, // Prevents client-side access to the cookie
       secure: process.env.NODE_ENV === "production", // Use HTTPS in production
       maxAge: 12 * 60 * 60 * 1000, // 12 hours in milliseconds
       domain: "localhost", // Ensure this matches your server's domain

@@ -3,6 +3,11 @@ import mongoose, { Schema } from "mongoose";
 export interface IProduct extends Document {
   productName: string;
   productDescription: string;
+  cardImages: {
+    bgImage: string;
+    productImage: string;
+  };
+  mainImage: string;
   productWeight: {
     "250g": boolean;
     "500g": boolean;
@@ -60,6 +65,20 @@ const productSchema = new Schema({
   productName: {
     type: String,
     required: [true, "Product name is required"],
+  },
+  cardImages: {
+    bgImage: {
+      type: String,
+      required: false,
+    },
+    productImage: {
+      type: String,
+      required: false,
+    },
+  },
+  mainImage: {
+    type: String,
+    required: false,
   },
   productDescription: {
     type: String,
@@ -123,7 +142,7 @@ const productSchema = new Schema({
   productType: {
     type: String,
     required: [true, "Product type is required"],
-    enum: ["dried seed", "spicy masala"],
+    enum: ["seed", "powder"],
     default: null,
   },
   // additionalInformation: {
@@ -209,7 +228,6 @@ productSchema.pre("save", function (next) {
   );
   next();
 });
-
 
 // Create the User model
 const Product = mongoose.model<IProduct>("Product", productSchema);
