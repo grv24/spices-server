@@ -209,7 +209,7 @@ const productSchema = new Schema({
   },
   why: {
     type: String,
-    required: [true, "Why is required"],
+    required: false,
   },
   benifits: {
     type: [
