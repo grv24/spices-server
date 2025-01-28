@@ -1,6 +1,7 @@
 import express, { Request, Response } from "express";
 import { ProductController } from "../controllers";
 import { authenticateMiddleware } from "../middleware";
+import { upload } from "./banner.route";
 
 const router = express.Router();
 
@@ -14,6 +15,18 @@ router.post(
     productController.createProductController(req, res)
 );
 
+//update product
+router.patch(
+  "/:id",
+  upload.fields([
+    { name: "bgImage", maxCount: 1 },
+    { name: "productImage", maxCount: 1 },
+    { name: "mainImage", maxCount: 1 },
+  ]),
+  authenticateMiddleware("admin"),
+  (req: Request, res: Response) =>
+    productController.updateProductController(req, res)
+);
 //get all product
 router.get("/", (req: Request, res: Response) =>
   productController.getAllProductsController(req, res)
@@ -23,7 +36,5 @@ router.get("/", (req: Request, res: Response) =>
 router.get("/:type", (req: Request, res: Response) =>
   productController.getProductByTypeController(req, res)
 );
-
-
 
 export default router;

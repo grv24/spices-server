@@ -136,10 +136,10 @@ const productSchema = new Schema({
     type: Number,
     default: 0,
   },
-  productImage: {
-    type: [String],
-    required: [true, "Product image is required"],
-  },
+  // productImage: {
+  //   type: [String],
+  //   required: [true, "Product image is required"],
+  // },
   productType: {
     type: String,
     required: [true, "Product type is required"],

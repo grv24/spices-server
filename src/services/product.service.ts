@@ -1,3 +1,4 @@
+import { serverlessUploadOnCloudinary } from "../config/cloudinary";
 import { Product, IProduct } from "../models";
 
 export class ProductService {
@@ -20,16 +21,48 @@ export class ProductService {
     return product;
   }
   //update product
+  // Promise<IProduct | null>
   async updateProduct(
     productId: string,
-    productData: Partial<IProduct>
+    productData: Partial<IProduct>,
+    files?: Express.Multer.File[]
   ): Promise<IProduct | null> {
     if (!productId) {
       throw new Error("Product ID is required");
     }
-    const product = await Product.findByIdAndUpdate(productId, productData, {
-      new: true,
-    });
+
+    // Prepare the data to be updated, including handling files
+    const updatedData: any = { ...productData };
+
+    // If files are provided, upload them to Cloudinary and update the data
+    if (files && files.length > 0) {
+      for (const file of files) {
+        try {
+          const fieldName = file.fieldname; // Get field name
+          updatedData[fieldName] = await serverlessUploadOnCloudinary(file);
+        } catch (error) {
+          console.error(
+            `Error uploading ${file.fieldname} to Cloudinary:`,
+            error
+          );
+          throw new Error(
+            `Error uploading ${file.fieldname} image to Cloudinary`
+          );
+        }
+      }
+    }
+
+    // Perform the product update in the database
+    const product = await Product.findByIdAndUpdate(
+      productId,
+      updatedData,
+      { new: true, runValidators: true } // Enforce schema validation
+    );
+
+    if (!product) {
+      throw new Error("Product not found");
+    }
+
     return product;
   }
 
