@@ -7,7 +7,7 @@ import { config } from "./config";
 const allowedOrigins = [
   config.CLIENT_URL_LOCAL, // Local frontend for testing
   config.CLIENT_URL_LIVE,  // Production frontend URL
-  'http://localhost:5174', // Local frontend for testing
+  'http://localhost:5173', // Local frontend for testing
 ];
 
 
