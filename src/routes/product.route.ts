@@ -46,5 +46,12 @@ router.get("/single/:id", (req: Request, res: Response) =>
 router.get("/search/:name", (req: Request, res: Response) =>
   productController.searchProduct(req, res)
 );
+//update product price
+router.patch(
+  "/price/:id",
+  authenticateMiddleware("admin"),
+  (req: Request, res: Response) =>
+    productController.updateProductPrice(req, res)
+);
 
 export default router;

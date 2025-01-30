@@ -37,13 +37,7 @@ export interface IProduct extends Document {
     shippingPolicy: string;
   };
   offerId: Schema.Types.ObjectId;
-  status: {
-    "250g": "in stock" | "out of stock";
-    "500g": "in stock" | "out of stock";
-    "1kg": "in stock" | "out of stock";
-    "2kg": "in stock" | "out of stock";
-    "3kg": "in stock" | "out of stock";
-  };
+
   reviews: Array<{
     rating: number;
     reviewText: string;
@@ -96,32 +90,32 @@ const productSchema = new Schema({
   productPrice: {
     "250g": {
       type: Number,
-      required: function () {
-        return this.productWeight["250g"];
+      required: function (this: any) {
+        return this?.productWeight?.["250g"] ?? false;
       },
     },
     "500g": {
       type: Number,
-      required: function () {
-        return this.productWeight["500g"];
+      required: function (this: any) {
+        return this?.productWeight?.["500g"] ?? false;
       },
     },
     "1kg": {
       type: Number,
-      required: function () {
-        return this.productWeight["1kg"];
+      required: function (this: any) {
+        return this?.productWeight?.["1kg"] ?? false;
       },
     },
     "2kg": {
       type: Number,
-      required: function () {
-        return this.productWeight["2kg"];
+      required: function (this: any) {
+        return this?.productWeight?.["2kg"] ?? false;
       },
     },
     "3kg": {
       type: Number,
-      required: function () {
-        return this.productWeight["3kg"];
+      required: function (this: any) {
+        return this?.productWeight?.["3kg"] ?? false;
       },
     },
   },
@@ -136,60 +130,19 @@ const productSchema = new Schema({
     type: Number,
     default: 0,
   },
-  // productImage: {
-  //   type: [String],
-  //   required: [true, "Product image is required"],
-  // },
   productType: {
     type: String,
     required: [true, "Product type is required"],
     enum: ["seed", "powder"],
     default: null,
   },
-  // additionalInformation: {
-  //   returnPolicy: {
-  //     type: String,
-  //     required: true,
-  //     default: null,
-  //   },
-  //   shippingPolicy: {
-  //     type: String,
-  //     required: true,
-  //     default: null,
-  //   },
-  // },
+
   offerId: {
     type: Schema.Types.ObjectId,
     ref: "Offer",
     default: null,
   },
-  status: {
-    "250g": {
-      type: String,
-      enum: ["in stock", "out of stock"],
-      default: "out of stock",
-    },
-    "500g": {
-      type: String,
-      enum: ["in stock", "out of stock"],
-      default: "out of stock",
-    },
-    "1kg": {
-      type: String,
-      enum: ["in stock", "out of stock"],
-      default: "out of stock",
-    },
-    "2kg": {
-      type: String,
-      enum: ["in stock", "out of stock"],
-      default: "out of stock",
-    },
-    "3kg": {
-      type: String,
-      enum: ["in stock", "out of stock"],
-      default: "out of stock",
-    },
-  },
+
   reviews: [
     {
       rating: { type: Number, required: true, min: 1, max: 5 },
@@ -224,9 +177,21 @@ const productSchema = new Schema({
 
 productSchema.pre("save", function (next) {
   this.totalQuantity = Object.values(this.productQuantity).reduce(
-    (sum, qty) => sum + qty,
+    (sum: number, qty: number) => sum + qty,
     0
   );
+  next();
+});
+// Pre-update hook for when a product is updated using `updateOne` or similar queries
+productSchema.pre("findOneAndUpdate", function (next) {
+  const update = this.getUpdate() as mongoose.UpdateQuery<any>;
+  if (update.$set && update.$set.productQuantity) {
+    const newQuantities = update.$set.productQuantity;
+    update.$set.totalQuantity = Object.values(newQuantities).reduce(
+      (sum: number, qty: number) => sum + qty,
+      0
+    );
+  }
   next();
 });
 

@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import { serverlessUploadOnCloudinary } from "../config/cloudinary";
 import { Product, IProduct } from "../models";
 
@@ -78,5 +79,43 @@ export class ProductService {
       productName: { $regex: name, $options: "i" },
     }).exec();
     return product;
+  }
+
+  //update product price
+  async updateProductPrice(id: string, updateData: Partial<IProduct>) {
+    try {
+      const existingProduct = await Product.findById(id);
+      if (!existingProduct) {
+        throw new Error("Product not found");
+      }
+
+      const updatedProduct = await Product.findByIdAndUpdate(
+        id,
+        {
+          $set: {
+            productWeight: {
+              ...existingProduct.productWeight,
+              ...updateData.productWeight,
+            },
+            productPrice: {
+              ...existingProduct.productPrice,
+              ...updateData.productPrice,
+            },
+            productQuantity: {
+              ...existingProduct.productQuantity,
+              ...updateData.productQuantity,
+            },
+            totalQuantity:
+              updateData.totalQuantity ?? existingProduct.totalQuantity,
+          },
+        },
+        { new: true, runValidators: true }
+      );
+
+      return updatedProduct;
+    } catch (error) {
+      console.error("Error updating product:", error);
+      throw error;
+    }
   }
 }
