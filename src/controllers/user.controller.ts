@@ -9,7 +9,7 @@ const userService = new UserService();
 // Utility for error handling
 export const handleError = (res: Response, error: unknown) => {
   if (error instanceof Error) {
-    res.status(400).json({ message: error.message ,status:false});
+    res.status(400).json({ message: error.message, status: false });
   } else {
     res
       .status(500)
@@ -126,6 +126,20 @@ export class UserController {
       });
     } catch (error) {
       console.error("Error fetching users:", error);
+      handleError(res, error);
+    }
+  }
+
+  //logout
+  async logoutController(req: Request, res: Response) {
+    try {
+      if (!req.user) {
+        return res.status(401).json({ message: "Unauthorized" });
+      }
+      await userService.logoutUser(res);
+      res.status(200).json({ message: "User logged out successfully" });
+    } catch (error) {
+      console.error("Error logging out user:", error);
       handleError(res, error);
     }
   }

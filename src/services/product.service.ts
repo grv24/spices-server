@@ -17,11 +17,11 @@ export class ProductService {
     if (!productId) {
       throw new Error("Product ID is required");
     }
+   
     const product = await Product.findById(productId);
     return product;
   }
   //update product
-  // Promise<IProduct | null>
   async updateProduct(
     productId: string,
     productData: Partial<IProduct>,

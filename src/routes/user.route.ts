@@ -14,7 +14,8 @@ router.post("/register", (req: Request, res: Response) =>
 router.post("/login", (req: Request, res: Response) =>
   userController.loginController(req, res)
 );
-
+//logout 
+router.get("/logout",(req:Request,res:Response)=>userController.logoutController(req,res))
 
 //change-password
 router.post(

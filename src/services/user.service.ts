@@ -40,6 +40,9 @@ export class UserService {
         email: user.email,
         firstName: user.f_name,
         lastName: user.l_name,
+        order:user?.orders,
+        cart:user?.cart,
+        wishlist:user?.wishlist
       },
       process.env.JWT_SECRET!,
       {
@@ -100,7 +103,15 @@ export class UserService {
   //forget password
   async forgetPassword() {}
   //logout
-  async logoutUser() {}
+  async logoutUser(res: Response): Promise<void> {
+    // Clear the token cookie
+    res.clearCookie("token", {
+      httpOnly: false, // Prevents client-side access to the cookie
+      secure: process.env.NODE_ENV === "production", // Use HTTPS in production
+      domain: "localhost", // Ensure this matches your server's domain
+      path: "/", 
+    });
+  }
   //delete user
   async deleteUser() {}
   //get all user

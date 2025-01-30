@@ -115,4 +115,20 @@ export class ProductController {
       handleError(res, error);
     }
   }
+
+  //get product by id
+  async getProductByIdController(req: Request, res: Response) {
+    try {
+      console.log(req.params.id, "productId controller");
+      const product = await productService.getProductById(req.params.id);
+      res.status(200).json({
+        status: true,
+        message: "Product fetched successfully",
+        data: product,
+      });
+    } catch (error) {
+      console.error("Error fetching product:", error);
+      handleError(res, error);
+    }
+  }
 }
