@@ -17,7 +17,7 @@ export class ProductService {
     if (!productId) {
       throw new Error("Product ID is required");
     }
-   
+
     const product = await Product.findById(productId);
     return product;
   }
@@ -70,5 +70,13 @@ export class ProductService {
   async getProductByType(type: string): Promise<IProduct[]> {
     const updatedType = type.replace(/-/g, " ");
     return Product.find({ productType: updatedType });
+  }
+
+  //search product
+  async searchProduct(name: string): Promise<IProduct[]> {
+    const product = await Product.find({
+      productName: { $regex: name, $options: "i" },
+    }).exec();
+    return product;
   }
 }

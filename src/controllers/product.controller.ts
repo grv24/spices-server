@@ -131,4 +131,19 @@ export class ProductController {
       handleError(res, error);
     }
   }
+
+  //search product
+  async searchProduct(req: Request, res: Response) {
+    try {
+      const product = await productService.searchProduct(req.params.name);
+      res.status(200).json({
+        status: true,
+        message: "Product fetched successfully",
+        data: product,
+      });
+    } catch (error) {
+      console.error("Error fetching product:", error);
+      handleError(res, error);
+    }
+  }
 }

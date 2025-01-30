@@ -37,9 +37,14 @@ router.get("/:type", (req: Request, res: Response) =>
   productController.getProductByTypeController(req, res)
 );
 
-//get by id 
+//get by id
 router.get("/single/:id", (req: Request, res: Response) =>
   productController.getProductByIdController(req, res)
+);
+
+//search product
+router.get("/search/:name", (req: Request, res: Response) =>
+  productController.searchProduct(req, res)
 );
 
 export default router;
