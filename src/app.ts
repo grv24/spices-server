@@ -6,10 +6,9 @@ import { config } from "./config";
 
 const allowedOrigins = [
   config.CLIENT_URL_LOCAL, // Local frontend for testing
-  config.CLIENT_URL_LIVE,  // Production frontend URL
-  'http://localhost:5173', // Local frontend for testing
+  config.CLIENT_URL_LIVE, // Production frontend URL
+  "http://localhost:5173", // Local frontend for testing
 ];
-
 
 const app = express();
 
@@ -52,12 +51,23 @@ app.get("/api", (req, res) => {
 });
 
 // Import routes
-import { userRouter, adminRouter, productRouter, bannerRouter } from "./routes";
+import {
+  userRouter,
+  adminRouter,
+  productRouter,
+  bannerRouter,
+  wishlistRouter,
+  cartRouter,
+  orderRouter,
+} from "./routes";
 
 // Use routes
 app.use("/api/user", userRouter);
 app.use("/api/admin", adminRouter);
 app.use("/api/product", productRouter);
 app.use("/api/banner", bannerRouter);
+app.use("/api/order", orderRouter);
+app.use("/api/wishlist", wishlistRouter);
+app.use("/api/cart", cartRouter);
 
 export default app;

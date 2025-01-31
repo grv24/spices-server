@@ -109,7 +109,7 @@ const userSchema = new Schema<IUser>({
     {
       productId: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Product",
+        ref: "Cart",
         required: true,
       },
       quantity: { type: Number, required: true, min: 1 },
@@ -119,7 +119,7 @@ const userSchema = new Schema<IUser>({
     {
       productId: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Product",
+        ref: "Wishlist",
         required: true,
       },
     },
