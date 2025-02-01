@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken";
-import { User } from "../models";
+import { Cart, User } from "../models";
 import { Response } from "express";
 import { IUser } from "../models";
 
@@ -24,7 +24,11 @@ export class UserService {
   }
 
   //login
-  async login(email: string, password: string,res: Response): Promise<{ token: string }> {
+  async login(
+    email: string,
+    password: string,
+    res: Response
+  ): Promise<{ token: string }> {
     const user = await User.findOne({ email });
     if (!user) {
       throw new Error("User not found.");
@@ -40,9 +44,6 @@ export class UserService {
         email: user.email,
         firstName: user.f_name,
         lastName: user.l_name,
-        order:user?.orders,
-        cart:user?.cart,
-        wishlist:user?.wishlist
       },
       process.env.JWT_SECRET!,
       {
@@ -55,7 +56,7 @@ export class UserService {
       secure: process.env.NODE_ENV === "production", // Use HTTPS in production
       maxAge: 12 * 60 * 60 * 1000, // 12 hours in milliseconds
       domain: "localhost", // Ensure this matches your server's domain
-      path: "/", 
+      path: "/",
     });
     return { token };
   }
@@ -87,6 +88,8 @@ export class UserService {
   //get current user
   async getCurrentUser(userId: string): Promise<IUser> {
     const user = await User.findById(userId);
+    const cart = await Cart.find({userId}).populate("productId")
+    console.log(cart,user)
     if (!user) {
       throw new Error("User not found");
     }
@@ -109,7 +112,7 @@ export class UserService {
       httpOnly: false, // Prevents client-side access to the cookie
       secure: process.env.NODE_ENV === "production", // Use HTTPS in production
       domain: "localhost", // Ensure this matches your server's domain
-      path: "/", 
+      path: "/",
     });
   }
   //delete user

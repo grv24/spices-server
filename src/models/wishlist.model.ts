@@ -18,6 +18,7 @@ const wishlistSchema = new Schema<IWishlist>(
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true,
+      unique: true,
     },
     products: [
       {
@@ -25,6 +26,7 @@ const wishlistSchema = new Schema<IWishlist>(
           type: mongoose.Schema.Types.ObjectId,
           ref: "Product",
           required: true,
+          unique: true,
         },
         quantity: {
           type: Number,
@@ -34,7 +36,7 @@ const wishlistSchema = new Schema<IWishlist>(
       },
     ],
   },
-  { timestamps: true } 
+  { timestamps: true }
 );
 
 // Create the Wishlist model

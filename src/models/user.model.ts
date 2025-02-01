@@ -2,15 +2,7 @@ import mongoose, { Schema, Document } from "mongoose";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
-// Define the interfaces for CartItem, WishlistItem
-interface ICartItem {
-  productId: mongoose.Schema.Types.ObjectId;
-  quantity: number;
-}
 
-interface IWishlistItem {
-  productId: mongoose.Schema.Types.ObjectId;
-}
 
 export interface IUser extends Document {
   _id: mongoose.Schema.Types.ObjectId;
@@ -27,9 +19,9 @@ export interface IUser extends Document {
   password: string;
   refreshToken?: string;
   role: string;
-  cart: ICartItem[];
-  wishlist: IWishlistItem[];
-  orders: mongoose.Schema.Types.ObjectId[]; 
+  // cart: ICartItem[];
+  // wishlist: IWishlistItem[];
+  // orders: mongoose.Schema.Types.ObjectId[];
   status: string; // e.g., "active", "inactive", "suspended"
   comparePassword(candidatePassword: string): Promise<boolean>;
   generateAuthToken(): string;
@@ -105,31 +97,7 @@ const userSchema = new Schema<IUser>({
     type: String,
     default: "user",
   },
-  cart: [
-    {
-      productId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Cart",
-        required: true,
-      },
-      quantity: { type: Number, required: true, min: 1 },
-    },
-  ],
-  wishlist: [
-    {
-      productId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Wishlist",
-        required: true,
-      },
-    },
-  ],
-  orders: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Order", // Reference to the Order model
-    },
-  ],
+
   status: {
     type: String,
     required: true,
