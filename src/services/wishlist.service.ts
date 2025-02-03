@@ -3,7 +3,11 @@ import mongoose from "mongoose";
 
 export class WishlistService {
   async createWishlist(
-    data: { productId: mongoose.Schema.Types.ObjectId; quantity: number },
+    data: {
+      weight: string;
+      productId: mongoose.Schema.Types.ObjectId;
+      quantity: number;
+    },
     userId: string
   ): Promise<IWishlist> {
     try {
@@ -12,7 +16,8 @@ export class WishlistService {
       if (wishlist) {
         // Check if the product already exists in the wishlist
         const existingProductIndex = wishlist.products.findIndex(
-          (product) => product.productId.toString() === data.productId.toString()
+          (product) =>
+            product.productId.toString() === data.productId.toString()
         );
 
         if (existingProductIndex !== -1) {
@@ -20,7 +25,11 @@ export class WishlistService {
           wishlist.products[existingProductIndex].quantity += data.quantity;
         } else {
           // Otherwise, add a new product to the wishlist
-          wishlist.products.push({ productId: data.productId, quantity: data.quantity });
+          wishlist.products.push({
+            productId: data.productId,
+            quantity: data.quantity,
+            weight: data.weight,
+          });
         }
 
         await wishlist.save();
@@ -28,7 +37,13 @@ export class WishlistService {
         // If no wishlist exists, create a new one
         wishlist = new Wishlist({
           userId,
-          products: [{ productId: data.productId, quantity: data.quantity }],
+          products: [
+            {
+              productId: data.productId,
+              quantity: data.quantity,
+              weight: data.weight,
+            },
+          ],
         });
 
         await wishlist.save();

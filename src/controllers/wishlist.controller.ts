@@ -16,6 +16,7 @@ export class WishlistController {
       const data = {
         productId: req.body.productId,
         quantity: req.body.quantity,
+        weight: req.body.weight,
       };
       const cart = await wishlistService.createWishlist(data, user._id);
 
