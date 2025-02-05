@@ -9,6 +9,7 @@ export interface IProduct extends Document {
   };
   mainImage: string;
   productWeight: {
+    "100g": boolean;
     "250g": boolean;
     "500g": boolean;
     "1kg": boolean;
@@ -16,6 +17,7 @@ export interface IProduct extends Document {
     "3kg": boolean;
   };
   productPrice: {
+    "100g": boolean;
     "250g": number;
     "500g": number;
     "1kg": number;
@@ -23,6 +25,7 @@ export interface IProduct extends Document {
     "3kg": number;
   };
   productQuantity: {
+    "100g": number;
     "250g": number;
     "500g": number;
     "1kg": number;
@@ -81,6 +84,7 @@ const productSchema = new Schema({
   },
 
   productWeight: {
+    "100g": { type: Boolean, default: false },
     "250g": { type: Boolean, default: false },
     "500g": { type: Boolean, default: false },
     "1kg": { type: Boolean, default: false },
@@ -88,6 +92,12 @@ const productSchema = new Schema({
     "3kg": { type: Boolean, default: false },
   },
   productPrice: {
+    "100g": {
+      type: Number,
+      required: function (this: any) {
+        return this?.productWeight?.["100g"] ?? false;
+      },
+    },
     "250g": {
       type: Number,
       required: function (this: any) {
@@ -120,6 +130,7 @@ const productSchema = new Schema({
     },
   },
   productQuantity: {
+    "100g": { type: Number, default: 0 },
     "250g": { type: Number, default: 0 },
     "500g": { type: Number, default: 0 },
     "1kg": { type: Number, default: 0 },
