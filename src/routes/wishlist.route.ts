@@ -17,4 +17,20 @@ router.get("/", authenticateMiddleware("user"), (req: Request, res: Response) =>
   cartController.getController(req, res)
 );
 
+//remove product
+router.delete(
+  "/:id/:weight",
+  authenticateMiddleware("user"),
+  (req: Request, res: Response) =>
+    cartController.removeProductController(req, res)
+);
+
+//clear wishlist
+router.get(
+  "/clear/product",
+  authenticateMiddleware("user"),
+  (req: Request, res: Response) =>
+    cartController.clearWishtlistController(req, res)
+);
+
 export default router;

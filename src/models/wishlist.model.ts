@@ -6,7 +6,8 @@ export interface IWishlist extends Document {
   products: {
     productId: mongoose.Schema.Types.ObjectId;
     quantity: number;
-    weight:string;
+    weight: string;
+    price: string;
   }[];
   createdAt: Date;
   updatedAt: Date;
@@ -35,6 +36,10 @@ const wishlistSchema = new Schema<IWishlist>(
           min: 1,
         },
         weight: {
+          type: String,
+          require: true,
+        },
+        price: {
           type: String,
           require: true,
         },
