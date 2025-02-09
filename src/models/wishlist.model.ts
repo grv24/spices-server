@@ -9,8 +9,6 @@ export interface IWishlist extends Document {
     weight: string;
     price: string;
   }[];
-  createdAt: Date;
-  updatedAt: Date;
 }
 
 // Define the Wishlist schema

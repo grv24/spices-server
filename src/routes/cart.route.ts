@@ -16,5 +16,19 @@ router.post(
 router.get("/", authenticateMiddleware("user"), (req: Request, res: Response) =>
   cartController.getController(req, res)
 );
+//remove product
+router.delete(
+  "/:id/:weight",
+  authenticateMiddleware("user"),
+  (req: Request, res: Response) =>
+    cartController.removeCartProduct(req, res)
+);
 
+//clear 
+router.get(
+  "/clear/product",
+  authenticateMiddleware("user"),
+  (req: Request, res: Response) =>
+    cartController.clearCart(req, res)
+);
 export default router;

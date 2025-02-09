@@ -37,7 +37,7 @@ export class WishlistService {
             productId: data.productId,
             quantity: data.quantity,
             weight: data.weight,
-            price: String(availability?.price), // You can add more details here as required
+            price: String(availability?.price),
           });
         }
 

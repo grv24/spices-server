@@ -6,6 +6,8 @@ export interface ICart extends Document {
   products: {
     productId: mongoose.Schema.Types.ObjectId;
     quantity: number;
+    weight: string;
+    price: string;
   }[];
 }
 
@@ -25,6 +27,15 @@ const cartSchema = new Schema<ICart>({
         required: true,
       },
       quantity: { type: Number, required: true, min: 1 },
+      weight: {
+        type: String,
+        require: true,
+      },
+      price: {
+        type: String,
+        require: true,
+      },
+
     },
   ],
 });
