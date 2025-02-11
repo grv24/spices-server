@@ -8,7 +8,7 @@ const allowedOrigins = [
   config.CLIENT_URL_LOCAL, // Local frontend for testing
   config.CLIENT_URL_LIVE, // Production frontend URL
   "http://localhost:5173", // Local frontend for testing
-  "https://spices-client-2wkuznu1c-grv24s-projects.vercel.app"
+  "https://mahamaya33.in"
 ];
 
 const app = express();
