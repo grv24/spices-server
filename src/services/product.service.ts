@@ -118,4 +118,19 @@ export class ProductService {
       throw error;
     }
   }
+
+  //filter product
+  async filterProduct(category: string, priceOrder: string) {
+    try {
+      const sortOrder = priceOrder === "asc" ? 1 : -1;
+      const products = await Product.find({
+        productType: category,
+      }).sort({ productPrice: sortOrder });
+
+      return products;
+    } catch (error) {
+      console.error("Error filter product:", error);
+      throw error;
+    }
+  }
 }

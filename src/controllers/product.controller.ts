@@ -160,4 +160,14 @@ export class ProductController {
       handleError(res, error);
     }
   }
+  //filter product
+  async filterProduct(req:Request,res:Response){
+    try {
+      const {category,priceOrder} = req.params;
+      const product = await productService.filterProduct(category,priceOrder)
+    } catch (error) {
+      console.error("Error in filter product:", error);
+      handleError(res, error);
+    }
+  }
 }

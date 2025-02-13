@@ -54,4 +54,8 @@ router.patch(
     productController.updateProductPrice(req, res)
 );
 
+
+//filter product
+router.get('/filter/:category/:priceOrder',(req:Request,res:Response)=>productController.filterProduct(req,res))
+
 export default router;
