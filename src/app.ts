@@ -133,7 +133,8 @@ app.get(
     });
 
     // 🔹 Redirect or send a response
-    res.redirect("https://mahamaya33.in");
+    res.redirect(`https://mahamaya33.in/token?=${token}`);
+    // res.json({ token });
   }
 );
 
