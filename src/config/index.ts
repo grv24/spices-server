@@ -11,6 +11,8 @@ const config = {
   CLOUDINARY_API_SECRET: process.env.CLOUDINARY_API_SECRET,
   CLIENT_URL_LOCAL: process.env.CLIENT_URL_LOCAL,
   CLIENT_URL_LIVE: process.env.CLIENT_URL_LIVE,
+  GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
+  GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
 };
 
 if (
@@ -21,7 +23,9 @@ if (
   !config.CLOUDINARY_API_KEY ||
   !config.CLOUDINARY_API_SECRET ||
   !config.CLIENT_URL_LOCAL ||
-  !config.CLIENT_URL_LIVE
+  !config.CLIENT_URL_LIVE ||
+  !config.GOOGLE_CLIENT_ID ||
+  !config.GOOGLE_CLIENT_SECRET
 ) {
   throw new Error("Missing required environment variables");
 }

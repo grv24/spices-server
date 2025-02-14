@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { UserService } from "../services";
 import { IUser } from "../models";
 import { stat } from "fs";
+import passport from "passport";
 
 // Initialize the UserService instance
 const userService = new UserService();
@@ -142,5 +143,30 @@ export class UserController {
       console.error("Error logging out user:", error);
       handleError(res, error);
     }
+  }
+
+  //google auth
+  // Google Auth Redirect
+  googleAuthController(req: Request, res: Response) {
+    passport.authenticate("google", { scope: ["profile", "email"] })(req, res);
+  }
+
+  // Google Callback
+  googleAuthCallbackController(req: Request, res: Response) {
+    passport.authenticate("google", { failureRedirect: "/" }, (err, user) => {
+      if (err || !user) {
+        return res.status(400).json({ message: "Authentication failed" });
+      }
+
+      req.login(user, (err) => {
+        if (err) return res.status(500).json({ message: "Login error" });
+
+        res.status(200).json({
+          status: true,
+          message: "Google login successful",
+          data: user,
+        });
+      });
+    })(req, res);
   }
 }

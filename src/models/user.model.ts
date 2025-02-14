@@ -2,8 +2,6 @@ import mongoose, { Schema, Document } from "mongoose";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
-
-
 export interface IUser extends Document {
   _id: mongoose.Schema.Types.ObjectId;
   f_name: string;
@@ -26,18 +24,23 @@ export interface IUser extends Document {
   comparePassword(candidatePassword: string): Promise<boolean>;
   generateAuthToken(): string;
   generateRefreshToken(): string;
+  isOAuthUser: boolean;
 }
 
 const userSchema = new Schema<IUser>({
   f_name: {
     type: String,
-    required: true,
+    required: function () {
+      return !this.isOAuthUser;
+    }, // Required only if not an OAuth user
     trim: true,
     lowercase: true,
   },
   l_name: {
     type: String,
-    required: true,
+    required: function () {
+      return !this.isOAuthUser;
+    }, // Required only if not an OAuth user
     trim: true,
     lowercase: true,
   },
@@ -48,56 +51,15 @@ const userSchema = new Schema<IUser>({
     lowercase: true,
     match: /.+\@.+\..+/,
   },
-  phone: {
-    type: Number,
-    required: false,
-    unique: false,
-    validate: {
-      validator: function (v: number) {
-        return /^(?:(?:\+91|91|0)?[789]\d{9})$/.test(String(v));
-      },
-      message: (props: { value: string }) =>
-        `${props.value} is not a valid Indian phone number!`,
-    },
-  },
-  address: {
-    street: {
-      type: String,
-      required: false,
-      trim: true,
-      lowercase: true,
-    },
-    city: {
-      type: String,
-      required: false,
-      trim: true,
-      lowercase: true,
-    },
-    state: {
-      type: String,
-      required: false,
-      trim: true,
-      lowercase: true,
-    },
-    postalCode: {
-      type: String,
-      required: false,
-      match: /^\d{6}$/,
-    },
-  },
   password: {
     type: String,
-    required: [true, "Password is required"],
+    required: function () {
+      return !this.isOAuthUser;
+    }, // Required only if not an OAuth user
   },
-  refreshToken: {
-    type: String,
-    required: false,
-  },
-  role: {
-    type: String,
-    default: "user",
-  },
-
+  isOAuthUser: { type: Boolean, default: false }, // Flag to identify OAuth users
+  refreshToken: { type: String, required: false },
+  role: { type: String, default: "user" },
   status: {
     type: String,
     required: true,
