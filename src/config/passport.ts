@@ -13,7 +13,7 @@ passport.use(
     {
       clientID: config.GOOGLE_CLIENT_ID as string,
       clientSecret: config.GOOGLE_CLIENT_SECRET as string,
-      callbackURL: "/auth/google/callback",
+      callbackURL: "https://spices-server.onrender.com/auth/google/callback",
     },
     async (accessToken, refreshToken, profile, done) => {
       try {
