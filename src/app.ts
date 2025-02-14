@@ -128,6 +128,8 @@ app.get(
       httpOnly: true, // Prevent JavaScript access (more secure)
       secure: process.env.NODE_ENV === "production",
       maxAge: 12 * 60 * 60 * 1000, // 12 hours in milliseconds
+      domain: "mahamaya33.in",
+      sameSite: "lax",
     });
 
     // 🔹 Redirect or send a response
