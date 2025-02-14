@@ -126,14 +126,12 @@ app.get(
     // 🔹 Store token in HTTP-only cookie
     res.cookie("token", token, {
       httpOnly: true, // Prevent JavaScript access (more secure)
-      secure: process.env.NODE_ENV === "production", 
+      secure: process.env.NODE_ENV === "production",
       maxAge: 12 * 60 * 60 * 1000, // 12 hours in milliseconds
     });
 
     // 🔹 Redirect or send a response
-    res.json({
-      message: "Authentication successful",
-    });
+    res.redirect("https://mahamaya33.in");
   }
 );
 
