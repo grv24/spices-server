@@ -125,11 +125,11 @@ app.get(
 
     // 🔹 Store token in HTTP-only cookie
     res.cookie("token", token, {
-      httpOnly: true, // Prevent JavaScript access (more secure)
+      httpOnly: false, // Prevent JavaScript access (more secure)
       secure: process.env.NODE_ENV === "production",
       maxAge: 12 * 60 * 60 * 1000, // 12 hours in milliseconds
-      domain: "mahamaya33.in",
-      sameSite: "lax",
+      domain: "localhost", // Ensure this matches your server's domain
+      path: "/",
     });
 
     // 🔹 Redirect or send a response
