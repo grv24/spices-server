@@ -1,10 +1,7 @@
-// src/types/custom.d.ts
-import { IUser } from "../models"; // Adjust path to your IUser model
+import { IUser } from "../models"; // Adjust path if necessary
 
 declare global {
   namespace Express {
-    interface Request {
-      user?: IUser;
-    }
+    interface User extends IUser {} // Extends Passport's `User` type
   }
 }

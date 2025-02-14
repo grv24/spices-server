@@ -48,20 +48,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose_1 = __importStar(require("mongoose"));
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
-const userSchema = new mongoose_1.Schema({
-    f_name: {
+const adminSchema = new mongoose_1.Schema({
+    username: {
         type: String,
-        required: function () {
-            return !this.isOAuthUser;
-        }, // Required only if not an OAuth user
-        trim: true,
-        lowercase: true,
-    },
-    l_name: {
-        type: String,
-        required: function () {
-            return !this.isOAuthUser;
-        }, // Required only if not an OAuth user
+        required: true,
         trim: true,
         lowercase: true,
     },
@@ -72,52 +62,44 @@ const userSchema = new mongoose_1.Schema({
         lowercase: true,
         match: /.+\@.+\..+/,
     },
+    phone: {
+        type: Number,
+        required: false,
+        unique: false,
+        validate: {
+            validator: function (v) {
+                return /^(?:(?:\+91|91|0)?[789]\d{9})$/.test(String(v));
+            },
+            message: (props) => `${props.value} is not a valid Indian phone number!`,
+        },
+    },
     password: {
         type: String,
-        required: function () {
-            return !this.isOAuthUser;
-        }, // Required only if not an OAuth user
+        required: [true, "Password is required"],
     },
-    isOAuthUser: { type: Boolean, default: false }, // Flag to identify OAuth users
-    refreshToken: { type: String, required: false },
-    role: { type: String, default: "user" },
-    status: {
+    refreshToken: {
         type: String,
-        required: true,
-        enum: ["active", "inactive", "suspended"],
-        default: "active",
+        required: false,
+    },
+    role: {
+        type: String,
+        default: "admin",
     },
 });
-// Password hashing before saving the user
-// userSchema.pre("save", async function (next) {
-//   const user = this as IUser;
-//   if (!user.isModified("password")) {
-//     return next(); // Skip hashing if the password hasn't been modified
-//   }
-//   const salt = await bcrypt.genSalt(10); // Generate salt for hashing
-//   user.password = await bcrypt.hash(user.password, salt); // Hash the password
-//   next(); // Continue saving the user
-// });
-// Method to compare passwords
-userSchema.methods.comparePassword = function (candidatePassword) {
+// Hash the password before saving the user model
+adminSchema.methods.comparePassword = function (candidatePassword) {
     return __awaiter(this, void 0, void 0, function* () {
-        const user = this;
-        return yield bcrypt_1.default.compare(candidatePassword, user.password);
+        const admin = this;
+        return yield bcrypt_1.default.compare(candidatePassword, admin.password);
     });
 };
 // Method to generate authentication token
-userSchema.methods.generateAuthToken = function () {
-    const user = this;
-    const payload = { id: user._id, role: user.role };
+adminSchema.methods.generateAuthToken = function () {
+    const admin = this;
+    const payload = { id: admin._id, role: admin.role };
     return jsonwebtoken_1.default.sign(payload, process.env.JWT_SECRET, { expiresIn: "1h" });
 };
-// Method to generate refresh token
-userSchema.methods.generateRefreshToken = function () {
-    const user = this;
-    const payload = { id: user._id };
-    return jsonwebtoken_1.default.sign(payload, process.env.JWT_SECRET, { expiresIn: "7d" });
-};
 // Create the User model
-const User = mongoose_1.default.model("User", userSchema);
-exports.default = User;
-//# sourceMappingURL=user.model.js.map
+const Admin = mongoose_1.default.model("Admin", adminSchema);
+exports.default = Admin;
+//# sourceMappingURL=admin.model.js.map
