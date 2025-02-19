@@ -44,6 +44,7 @@ export class UserService {
         email: user.email,
         firstName: user.f_name,
         lastName: user.l_name,
+        addresses: user.addresses,
       },
       process.env.JWT_SECRET!,
       {
