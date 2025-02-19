@@ -45,6 +45,7 @@ export class UserService {
         firstName: user.f_name,
         lastName: user.l_name,
         addresses: user.addresses,
+        mobile:user.phone
       },
       process.env.JWT_SECRET!,
       {
@@ -86,6 +87,7 @@ export class UserService {
     await user.save();
   }
 
+ 
   //get current user
   async getCurrentUser(userId: string): Promise<IUser> {
     const user = await User.findById(userId);
