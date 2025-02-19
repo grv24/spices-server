@@ -44,6 +44,40 @@ router.patch(
   (req: Request, res: Response) =>
     userController.updateUserCurrentController(req, res)
 );
+//create-address
+router.post(
+  "/address",
+  authenticateMiddleware("user"),
+  (req: Request, res: Response) =>
+    userController.createAddressController(req, res)
+);
+//update-address
+router.patch(
+  "/address",
+  authenticateMiddleware("user"),
+  (req: Request, res: Response) =>
+    userController.updateAddressController(req, res)
+);
+//remove-address
+router.delete(
+  "/address/:id",
+  authenticateMiddleware("user"),
+  (req: Request, res: Response) =>
+    userController.removeAddressController(req, res)
+);
+
+//set-default
+router.patch(
+  "/address/set-default/:id",
+  authenticateMiddleware("user"),
+  (req: Request, res: Response) => userController.setDefault(req, res)
+);
+//get-address
+router.get(
+  "/address",
+  authenticateMiddleware("user"),
+  (req: Request, res: Response) => userController.getAddress(req, res)
+);
 
 // ✅ Google Login Route
 router.get(

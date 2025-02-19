@@ -2,18 +2,23 @@ import mongoose, { Schema, Document } from "mongoose";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
+export interface IAddress {
+  createdAt: string | number | Date;
+  _id?: mongoose.Schema.Types.ObjectId;
+  address?: string;
+  city?: string;
+  state?: string;
+  postalCode?: string;
+  isDefault: boolean;
+}
+
 export interface IUser extends Document {
   _id: mongoose.Schema.Types.ObjectId;
   f_name: string;
   l_name: string;
   email: string;
   phone?: number;
-  address: {
-    street?: string;
-    city?: string;
-    state?: string;
-    postalCode?: string;
-  };
+  addresses: IAddress[];
   password: string;
   refreshToken?: string;
   role: string;
@@ -66,6 +71,15 @@ const userSchema = new Schema<IUser>({
     enum: ["active", "inactive", "suspended"],
     default: "active",
   },
+  addresses: [
+    {
+      address: { type: String },
+      city: { type: String },
+      state: { type: String },
+      postalCode: { type: String },
+      isDefault: { type: Boolean, default: true },
+    },
+  ],
 });
 
 // Password hashing before saving the user

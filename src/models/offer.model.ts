@@ -9,12 +9,12 @@ const offerSchema = new Schema({
   },
   offerType: {
     type: String,
-    enum: ["percent", "amount"], // "percent" for percentage off, "amount" for Rs off
+    enum: ["percent", "amount"], 
     required: [true, "Offer type is required"],
   },
   discountValue: {
     type: Number,
-    required: [true, "Discount value is required"], // E.g., 10% or ₹50
+    required: [true, "Discount value is required"],
   },
   startDate: {
     type: Date,

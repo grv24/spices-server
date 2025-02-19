@@ -131,6 +131,82 @@ export class UserController {
     }
   }
 
+  //create address
+  async createAddressController(req: Request, res: Response) {
+    try {
+      const userId = req.user.id; // Assuming `user` is added to `req` via authentication middleware
+      const result = await userService.createAddress(userId, req.body);
+      res.status(201).json(result);
+    } catch (error) {
+      res.status(400).json({ success: false, message: error.message });
+    }
+  }
+
+  // Update Address
+  async updateAddressController(req: Request, res: Response) {
+    try {
+      const userId = req.user.id;
+      const addressId = req.params.id;
+      const result = await userService.updateAddress(
+        userId,
+        addressId,
+        req.body
+      );
+      res.status(200).json(result);
+    } catch (error) {
+      res.status(400).json({ success: false, message: error.message });
+    }
+  }
+
+  // Remove Address
+  async removeAddressController(req: Request, res: Response) {
+    try {
+      const userId = req.user.id;
+      const addressId = req.params.id;
+      const result = await userService.removeAddress(userId, addressId);
+      res.status(200).json(result);
+    } catch (error) {
+      res.status(400).json({ success: false, message: error.message });
+    }
+  }
+  //get address
+  async getAddress(req: Request, res: Response) {
+    try {
+      const userId = req.user._id; // Get user ID from request params
+      const addresses = await userService.getAddressService(userId);
+
+      return res.status(200).json({
+        success: true,
+        addresses,
+      });
+    } catch (error) {
+      return res.status(400).json({
+        success: false,
+        message: error.message,
+      });
+    }
+  }
+  //set default address
+  async setDefault(req: Request, res: Response) {
+    try {
+      const userId = req.user.id;
+      const addressId = req.params.id;
+
+      if (!userId || !addressId) {
+        return res.status(400).json({
+          success: false,
+          message: "User ID and Address ID are required",
+        });
+      }
+
+      const result = await userService.isDefault(userId, addressId);
+
+      return res.status(200).json(result);
+    } catch (error) {
+      return res.status(500).json({ success: false, message: error.message });
+    }
+  }
+
   //logout
   async logoutController(req: Request, res: Response) {
     try {

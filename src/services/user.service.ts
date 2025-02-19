@@ -88,8 +88,8 @@ export class UserService {
   //get current user
   async getCurrentUser(userId: string): Promise<IUser> {
     const user = await User.findById(userId);
-    const cart = await Cart.find({userId}).populate("productId")
-    console.log(cart,user)
+    const cart = await Cart.find({ userId }).populate("productId");
+    console.log(cart, user);
     if (!user) {
       throw new Error("User not found");
     }
@@ -103,6 +103,153 @@ export class UserService {
     }
     return user;
   }
+  //create adddress
+  async createAddress(userId: string, newAddress: any) {
+    try {
+      const user = await User.findById(userId);
+      if (!user) throw new Error("User not found");
+
+      const existingAddresses = user.addresses;
+      if (existingAddresses.length == 0) {
+        // Add new address
+        user.addresses.push(newAddress);
+        await user.save();
+        return {
+          success: true,
+          message: "Address added successfully",
+          addresses: user.addresses,
+        };
+      } else {
+        // Set existing addresses' is_default to false
+        await Promise.all(
+          existingAddresses.map(async (address) => {
+            address.isDefault = false;
+          })
+        );
+        user.addresses.push(newAddress);
+        user.save();
+        return {
+          success: true,
+          message: "Address added successfully",
+          addresses: user.addresses,
+        };
+      }
+    } catch (error) {
+      throw new Error(error.message);
+    }
+  }
+  //update address
+  async updateAddress(userId: string, addressId: string, updatedData: any) {
+    try {
+      const user = await User.findById(userId);
+      if (!user) throw new Error("User not found");
+
+      // Find the address to update
+      const address = user.addresses.find(
+        (addr) => addr._id.toString() === addressId
+      );
+      if (!address) throw new Error("Address not found");
+      // Update fields
+      Object.assign(address, updatedData);
+      await user.save();
+
+      return {
+        success: true,
+        message: "Address updated successfully",
+        addresses: user.addresses,
+      };
+    } catch (error) {
+      throw new Error(error.message);
+    }
+  }
+  // remove Address
+  async removeAddress(userId: string, addressId: string) {
+    try {
+      const user = await User.findById(userId);
+      if (!user) throw new Error("User not found");
+
+      // Find the index of the address to remove
+      const addressIndex = user.addresses.findIndex(
+        (addr) => addr._id.toString() === addressId
+      );
+      if (addressIndex === -1) throw new Error("Address not found");
+
+      // Check if the address being removed is the default address
+      const isDefaultRemoved = user.addresses[addressIndex].isDefault;
+
+      // Remove the address
+      user.addresses.splice(addressIndex, 1);
+
+      // If the removed address was default and there are remaining addresses
+      if (isDefaultRemoved && user.addresses.length > 0) {
+        // Find the most recent address to set as default
+        const latestAddress = user.addresses.reduce((prev, current) =>
+          new Date(prev.createdAt) > new Date(current.createdAt)
+            ? prev
+            : current
+        );
+
+        if (latestAddress) {
+          latestAddress.isDefault = true;
+        }
+      }
+
+      await user.save();
+
+      return {
+        success: true,
+        message: "Address removed successfully",
+        addresses: user.addresses,
+      };
+    } catch (error) {
+      throw new Error(error.message);
+    }
+  }
+
+  //isDefault
+  async isDefault(userId: string, addressId: string) {
+    try {
+      const user = await User.findById(userId);
+      if (!user) throw new Error("User not found");
+
+      // Find the address to be set as default
+      const address = user.addresses.find(
+        (addr) => addr._id.toString() === addressId
+      );
+
+      if (!address) throw new Error("Address not found");
+
+      // Set all addresses to `isDefault = false`
+      user.addresses.forEach((addr) => (addr.isDefault = false));
+
+      // Set the selected address as default
+      address.isDefault = true;
+
+      await user.save();
+
+      return {
+        success: true,
+        message: "Default address updated successfully",
+        addresses: user.addresses,
+      };
+    } catch (error) {
+      throw new Error(error.message);
+    }
+  }
+
+  //get Address
+  async getAddressService(userId: string) {
+    try {
+      const user = await User.findById(userId).select("addresses");
+      if (!user) {
+        throw new Error("User not found");
+      }
+      return user.addresses;
+    } catch (error) {
+      throw new Error(error.message);
+    }
+  }
+
   //forget password
   async forgetPassword() {}
   //logout
