@@ -71,7 +71,7 @@ export class UserService {
     if (!user) {
       throw new Error("User not found");
     }
-    if (user.password != oldPassword) {
+    if (!user.isOAuthUser && user.password != oldPassword) {
       throw new Error("Old password is incorrect");
     }
 
@@ -98,7 +98,10 @@ export class UserService {
   //update user
   async updateUser(userId: string, data: Partial<IUser>): Promise<IUser> {
     try {
-      const user = await User.findByIdAndUpdate(userId, data, { new: true, runValidators: true }).lean();
+      const user = await User.findByIdAndUpdate(userId, data, {
+        new: true,
+        runValidators: true,
+      }).lean();
       if (!user) {
         throw new Error("User not found");
       }
@@ -107,7 +110,7 @@ export class UserService {
       throw new Error(`Failed to update user: ${(error as Error).message}`);
     }
   }
-  
+
   //create adddress
   async createAddress(userId: string, newAddress: any) {
     try {
@@ -131,7 +134,7 @@ export class UserService {
             address.isDefault = false;
           })
         );
-        
+
         user.addresses.push(newAddress);
         user.save();
         return {
