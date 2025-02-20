@@ -131,6 +131,7 @@ export class UserService {
             address.isDefault = false;
           })
         );
+        
         user.addresses.push(newAddress);
         user.save();
         return {
