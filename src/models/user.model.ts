@@ -17,7 +17,7 @@ export interface IUser extends Document {
   f_name: string;
   l_name: string;
   email: string;
-  phone?: number;
+  phone?: string;
   addresses: IAddress[];
   password: string;
   refreshToken?: string;
@@ -48,6 +48,13 @@ const userSchema = new Schema<IUser>({
     }, // Required only if not an OAuth user
     trim: true,
     lowercase: true,
+  },
+  phone: {
+    type: String,
+    required: false,
+    unique: true,
+    lowercase: true,
+    match: /^[0-9]{10}$/,
   },
   email: {
     type: String,

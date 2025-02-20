@@ -44,8 +44,6 @@ export class UserService {
         email: user.email,
         firstName: user.f_name,
         lastName: user.l_name,
-        addresses: user.addresses,
-        mobile:user.phone
       },
       process.env.JWT_SECRET!,
       {
@@ -87,7 +85,6 @@ export class UserService {
     await user.save();
   }
 
- 
   //get current user
   async getCurrentUser(userId: string): Promise<IUser> {
     const user = await User.findById(userId);
@@ -100,12 +97,17 @@ export class UserService {
   }
   //update user
   async updateUser(userId: string, data: Partial<IUser>): Promise<IUser> {
-    const user = await User.findByIdAndUpdate(userId, data, { new: true });
-    if (!user) {
-      throw new Error("User not found");
+    try {
+      const user = await User.findByIdAndUpdate(userId, data, { new: true, runValidators: true }).lean();
+      if (!user) {
+        throw new Error("User not found");
+      }
+      return user as IUser;
+    } catch (error) {
+      throw new Error(`Failed to update user: ${(error as Error).message}`);
     }
-    return user;
   }
+  
   //create adddress
   async createAddress(userId: string, newAddress: any) {
     try {
