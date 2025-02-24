@@ -88,8 +88,7 @@ export class UserService {
   //get current user
   async getCurrentUser(userId: string): Promise<IUser> {
     const user = await User.findById(userId);
-    const cart = await Cart.find({ userId }).populate("productId");
-    console.log(cart, user);
+    // const cart = await Cart.find({ userId });
     if (!user) {
       throw new Error("User not found");
     }

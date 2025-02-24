@@ -35,7 +35,6 @@ const cartSchema = new Schema<ICart>({
         type: String,
         require: true,
       },
-
     },
   ],
 });

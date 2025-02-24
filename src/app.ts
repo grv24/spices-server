@@ -90,6 +90,7 @@ app.use("/api/banner", bannerRouter);
 app.use("/api/order", orderRouter);
 app.use("/api/wishlist", wishlistRouter);
 app.use("/api/cart", cartRouter);
+app.use("/api/order", orderRouter);
 
 // 🔹 Google OAuth Route
 // app.get(
