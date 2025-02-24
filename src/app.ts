@@ -80,6 +80,7 @@ import {
   wishlistRouter,
   cartRouter,
   orderRouter,
+  offerRouter,
 } from "./routes";
 
 // 🔹 Use routes
@@ -91,6 +92,7 @@ app.use("/api/order", orderRouter);
 app.use("/api/wishlist", wishlistRouter);
 app.use("/api/cart", cartRouter);
 app.use("/api/order", orderRouter);
+app.use("/api/offer", offerRouter);
 
 // 🔹 Google OAuth Route
 // app.get(

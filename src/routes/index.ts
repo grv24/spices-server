@@ -5,6 +5,7 @@ import bannerRouter from "./banner.route";
 import cartRouter from "./cart.route";
 import wishlistRouter from "./wishlist.route";
 import orderRouter from "./order.route";
+import offerRouter from "./offer.route";
 
 export {
   userRouter,
@@ -14,4 +15,5 @@ export {
   cartRouter,
   wishlistRouter,
   orderRouter,
+  offerRouter
 };
